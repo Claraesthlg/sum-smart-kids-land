@@ -3,23 +3,31 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Star, Calculator, Heart, Sparkles } from 'lucide-react';
+import { Star, Calculator, Heart, Sparkles, ArrowLeft, LogIn, UserPlus } from 'lucide-react';
 
 interface LoginFormProps {
   onLogin: (username: string, password: string) => void;
   onRegister: (username: string, password: string) => void;
   error?: string;
+  isRegistering?: boolean;
+  onBack?: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onRegister, error }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ 
+  onLogin, 
+  onRegister, 
+  error, 
+  isRegistering = false,
+  onBack 
+}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isRegistering, setIsRegistering] = useState(false);
+  const [currentMode, setCurrentMode] = useState(isRegistering);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim() && password.trim()) {
-      if (isRegistering) {
+      if (currentMode) {
         onRegister(username, password);
       } else {
         onLogin(username, password);
@@ -37,6 +45,15 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onRegister, error }) => 
 
       <Card className="w-full max-w-md kid-card relative z-10">
         <CardHeader className="text-center space-y-4">
+          {onBack && (
+            <Button
+              onClick={onBack}
+              className="absolute top-4 left-4 bg-white/80 hover:bg-white text-kidBlue border-2 border-kidBlue rounded-xl p-2 w-auto h-auto"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          )}
+          
           <div className="flex justify-center space-x-2">
             <Star className="h-8 w-8 text-kidYellow animate-bounce" />
             <Calculator className="h-8 w-8 text-kidBlue animate-bounce delay-100" />
@@ -47,7 +64,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onRegister, error }) => 
             MateMáticos
           </CardTitle>
           <CardDescription className="text-lg text-gray-600">
-            {isRegistering ? '¡Crea tu cuenta para empezar!' : '¡Bienvenido de vuelta!'}
+            {currentMode ? '¡Crea tu cuenta para empezar!' : '¡Bienvenido de vuelta!'}
           </CardDescription>
         </CardHeader>
 
@@ -93,16 +110,26 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLogin, onRegister, error }) => 
               type="submit"
               className="w-full kid-button h-12 text-xl"
             >
-              {isRegistering ? '¡Crear cuenta!' : '¡Empezar a jugar!'}
+              {currentMode ? (
+                <>
+                  <UserPlus className="h-6 w-6 mr-3" />
+                  ¡Crear cuenta!
+                </>
+              ) : (
+                <>
+                  <LogIn className="h-6 w-6 mr-3" />
+                  ¡Empezar a jugar!
+                </>
+              )}
             </Button>
           </form>
 
           <div className="text-center">
             <button
-              onClick={() => setIsRegistering(!isRegistering)}
+              onClick={() => setCurrentMode(!currentMode)}
               className="text-kidBlue hover:text-kidPurple font-semibold text-lg transition-colors duration-200"
             >
-              {isRegistering 
+              {currentMode 
                 ? '¿Ya tienes cuenta? ¡Inicia sesión!' 
                 : '¿No tienes cuenta? ¡Regístrate!'
               }

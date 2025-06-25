@@ -1,7 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import LoginForm from '../components/LoginForm';
+import LandingPage from '../components/LandingPage';
 import ExerciseGrid from '../components/ExerciseGrid';
 import ExerciseDetail from '../components/ExerciseDetail';
 import { useToast } from '../hooks/use-toast';
@@ -28,6 +28,8 @@ const Index = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [selectedExercise, setSelectedExercise] = useState<number | null>(null);
   const [loginError, setLoginError] = useState<string>('');
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
   const { toast } = useToast();
 
   // Cargar datos del localStorage al iniciar
@@ -110,6 +112,8 @@ const Index = () => {
       setCurrentUser(username);
       localStorage.setItem('matematicos-current-user', username);
       setLoginError('');
+      setShowLogin(false);
+      setShowRegister(false);
       toast({
         title: "¡Bienvenido!",
         description: `Hola ${username}, ¡comencemos a practicar matemáticas!`,
@@ -139,6 +143,8 @@ const Index = () => {
     setCurrentUser(username);
     localStorage.setItem('matematicos-current-user', username);
     setLoginError('');
+    setShowLogin(false);
+    setShowRegister(false);
     
     toast({
       title: "¡Cuenta creada!",
@@ -149,6 +155,8 @@ const Index = () => {
   const handleLogout = () => {
     setCurrentUser(null);
     setSelectedExercise(null);
+    setShowLogin(false);
+    setShowRegister(false);
     localStorage.removeItem('matematicos-current-user');
     toast({
       title: "¡Hasta luego!",
@@ -209,15 +217,45 @@ const Index = () => {
     setSelectedExercise(null);
   };
 
+  const handleShowLogin = () => {
+    setShowLogin(true);
+    setShowRegister(false);
+    setLoginError('');
+  };
+
+  const handleShowRegister = () => {
+    setShowRegister(true);
+    setShowLogin(false);
+    setLoginError('');
+  };
+
+  const handleBackToLanding = () => {
+    setShowLogin(false);
+    setShowRegister(false);
+    setLoginError('');
+  };
+
   const completedExercises = exercises.filter(ex => ex.isCompleted && ex.isCorrect).length;
 
-  // Si no hay usuario logueado, mostrar formulario de login
-  if (!currentUser) {
+  // Si no hay usuario logueado y no se está mostrando login/register, mostrar landing page
+  if (!currentUser && !showLogin && !showRegister) {
+    return (
+      <LandingPage
+        onShowLogin={handleShowLogin}
+        onShowRegister={handleShowRegister}
+      />
+    );
+  }
+
+  // Si se está mostrando el formulario de login o registro
+  if (!currentUser && (showLogin || showRegister)) {
     return (
       <LoginForm
         onLogin={handleLogin}
         onRegister={handleRegister}
         error={loginError}
+        isRegistering={showRegister}
+        onBack={handleBackToLanding}
       />
     );
   }
