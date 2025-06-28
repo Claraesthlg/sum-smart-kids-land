@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Check, X, Star } from 'lucide-react';
+import { Check, X, Star, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 interface Exercise {
@@ -30,15 +30,15 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
   const getCardStyle = () => {
     if (isCompleted && isCorrect) {
-      return 'bg-gradient-to-br from-green-100 to-green-200 border-green-400 shadow-green-200';
+      return 'bg-gradient-to-br from-green-100 to-emerald-200 border-green-400 shadow-green-300 shadow-2xl';
     }
     if (isCompleted && !isCorrect) {
-      return 'bg-gradient-to-br from-red-100 to-red-200 border-red-400 shadow-red-200';
+      return 'bg-gradient-to-br from-red-100 to-pink-200 border-red-400 shadow-red-300 shadow-2xl';
     }
     if (isSelected) {
-      return 'bg-gradient-to-br from-kidBlue/20 to-kidPurple/20 border-kidBlue shadow-kidBlue/30';
+      return 'bg-gradient-to-br from-kidBlue/20 to-kidPurple/20 border-kidBlue shadow-kidBlue/40 shadow-2xl';
     }
-    return 'bg-gradient-to-br from-white to-gray-50 border-gray-200 hover:border-kidBlue hover:shadow-kidBlue/20';
+    return 'bg-gradient-to-br from-white to-blue-50 border-gray-200 hover:border-kidBlue hover:shadow-kidBlue/30 shadow-xl';
   };
 
   const formatNumber = (num: number) => {
@@ -47,72 +47,84 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
   return (
     <Card
-      className={`relative cursor-pointer transition-all duration-300 transform hover:scale-105 p-6 ${getCardStyle()} ${
+      className={`relative cursor-pointer transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 p-8 ${getCardStyle()} ${
         isDisabled ? 'opacity-50 cursor-not-allowed' : ''
-      } shadow-lg border-4`}
+      } border-4 rounded-3xl overflow-hidden group`}
       onClick={!isDisabled ? onClick : undefined}
     >
-      {/* Indicador de estado */}
-      <div className="absolute top-2 right-2">
+      {/* Shine effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+
+      {/* Floating sparkles for completed exercises */}
+      {isCompleted && isCorrect && (
+        <>
+          <Sparkles className="absolute top-3 right-8 h-4 w-4 text-kidYellow sparkle-effect" />
+          <Sparkles className="absolute top-8 right-3 h-3 w-3 text-kidGreen sparkle-effect delay-500" />
+          <Sparkles className="absolute top-5 right-12 h-2 w-2 text-kidPink sparkle-effect delay-1000" />
+        </>
+      )}
+
+      {/* Indicador de estado mejorado */}
+      <div className="absolute top-3 right-3">
         {isCompleted && isCorrect && (
-          <div className="bg-green-500 text-white rounded-full p-2 animate-bounce">
-            <Check className="h-4 w-4" />
+          <div className="bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-full p-3 animate-bounce shadow-lg">
+            <Check className="h-6 w-6" />
           </div>
         )}
         {isCompleted && !isCorrect && (
-          <div className="bg-red-500 text-white rounded-full p-2 animate-wiggle">
-            <X className="h-4 w-4" />
+          <div className="bg-gradient-to-r from-red-400 to-pink-500 text-white rounded-full p-3 animate-pulse shadow-lg">
+            <X className="h-6 w-6" />
           </div>
         )}
         {!isCompleted && (
-          <div className="bg-kidYellow text-white rounded-full p-2">
-            <Star className="h-4 w-4" />
+          <div className="bg-gradient-to-r from-kidYellow to-kidOrange text-white rounded-full p-3 sparkle-effect shadow-lg">
+            <Star className="h-6 w-6" />
           </div>
         )}
       </div>
 
-      {/* Número del ejercicio */}
-      <div className="absolute top-2 left-2 bg-kidPurple text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm">
-        {exercise.id}
+      {/* Número del ejercicio mejorado */}
+      <div className="absolute top-3 left-3 bg-gradient-to-r from-kidPurple to-kidBlue text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg shadow-lg">
+        #{exercise.id}
       </div>
 
-      {/* Operación matemática */}
-      <div className="mt-8 text-center space-y-3">
-        <div className="font-mono text-2xl font-bold text-gray-800 bg-white/70 px-3 py-2 rounded-lg border-2 border-gray-200">
+      {/* Operación matemática mejorada */}
+      <div className="mt-12 text-center space-y-4">
+        <div className="math-number text-3xl">
           {formatNumber(minuend)}
         </div>
-        <div className="flex items-center justify-center space-x-2">
-          <span className="text-3xl font-bold text-kidRed">-</span>
-          <div className="font-mono text-2xl font-bold text-gray-800 bg-white/70 px-3 py-2 rounded-lg border-2 border-gray-200">
+        <div className="flex items-center justify-center space-x-3">
+          <span className="text-4xl font-bold text-kidRed animate-pulse">-</span>
+          <div className="math-number text-3xl">
             {formatNumber(subtrahend)}
           </div>
         </div>
-        <div className="border-t-4 border-gray-400 w-full"></div>
-        <div className="h-8 flex items-center justify-center">
+        <div className="border-t-4 border-gradient-to-r from-gray-300 to-gray-500 w-full mx-auto"></div>
+        <div className="h-12 flex items-center justify-center">
           {isCompleted ? (
-            <div className={`font-mono text-2xl font-bold px-3 py-2 rounded-lg border-2 ${
+            <div className={`font-mono text-3xl font-bold px-4 py-3 rounded-2xl border-4 shadow-lg ${
               isCorrect 
-                ? 'text-green-700 bg-green-100 border-green-300' 
-                : 'text-red-700 bg-red-100 border-red-300'
+                ? 'text-green-700 bg-gradient-to-br from-green-100 to-emerald-100 border-green-300' 
+                : 'text-red-700 bg-gradient-to-br from-red-100 to-pink-100 border-red-300'
             }`}>
               {exercise.userAnswer?.toString().padStart(6, '0') || '------'}
             </div>
           ) : (
-            <div className="text-gray-400 text-xl">¿?¿?¿?¿?¿?¿?</div>
+            <div className="text-gray-400 text-2xl font-bold animate-pulse">¿?¿?¿?¿?¿?¿?</div>
           )}
         </div>
       </div>
 
-      {/* Texto de estado */}
-      <div className="mt-4 text-center">
+      {/* Texto de estado mejorado */}
+      <div className="mt-6 text-center">
         {isCompleted && isCorrect && (
-          <span className="text-green-600 font-bold text-sm">¡Correcto!</span>
+          <span className="text-green-600 font-bold text-lg bg-green-100 px-4 py-2 rounded-full">✨ ¡Perfecto! ✨</span>
         )}
         {isCompleted && !isCorrect && (
-          <span className="text-red-600 font-bold text-sm">Inténtalo de nuevo</span>
+          <span className="text-red-600 font-bold text-lg bg-red-100 px-4 py-2 rounded-full">🎯 ¡Inténtalo de nuevo!</span>
         )}
         {!isCompleted && (
-          <span className="text-kidBlue font-bold text-sm">¡Toca para resolver!</span>
+          <span className="text-kidBlue font-bold text-lg bg-kidBlue/10 px-4 py-2 rounded-full">🚀 ¡Toca para resolver!</span>
         )}
       </div>
     </Card>
