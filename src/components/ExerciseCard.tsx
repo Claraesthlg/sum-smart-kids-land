@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Check, X, Star, Sparkles } from 'lucide-react';
+import { Check, X, Star, Clock, Target } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 interface Exercise {
@@ -30,15 +30,15 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
   const getCardStyle = () => {
     if (isCompleted && isCorrect) {
-      return 'bg-gradient-to-br from-green-100 to-emerald-200 border-green-400 shadow-green-300 shadow-2xl';
+      return 'modern-card bg-gradient-to-br from-emerald-50/80 to-green-100/80 border-emerald-200 glow-effect';
     }
     if (isCompleted && !isCorrect) {
-      return 'bg-gradient-to-br from-red-100 to-pink-200 border-red-400 shadow-red-300 shadow-2xl';
+      return 'modern-card bg-gradient-to-br from-red-50/80 to-pink-100/80 border-red-200';
     }
     if (isSelected) {
-      return 'bg-gradient-to-br from-kidBlue/20 to-kidPurple/20 border-kidBlue shadow-kidBlue/40 shadow-2xl';
+      return 'modern-card bg-gradient-to-br from-indigo-50/80 to-purple-100/80 border-indigo-300 glow-effect';
     }
-    return 'bg-gradient-to-br from-white to-blue-50 border-gray-200 hover:border-kidBlue hover:shadow-kidBlue/30 shadow-xl';
+    return 'modern-card bg-white/50 border-white/40 hover:bg-white/70';
   };
 
   const formatNumber = (num: number) => {
@@ -47,84 +47,83 @@ const ExerciseCard: React.FC<ExerciseCardProps> = ({
 
   return (
     <Card
-      className={`relative cursor-pointer transition-all duration-500 transform hover:scale-105 hover:-translate-y-2 p-8 ${getCardStyle()} ${
+      className={`relative cursor-pointer transition-all duration-500 hover-lift p-8 ${getCardStyle()} ${
         isDisabled ? 'opacity-50 cursor-not-allowed' : ''
-      } border-4 rounded-3xl overflow-hidden group`}
+      } border-2 rounded-3xl overflow-hidden group`}
       onClick={!isDisabled ? onClick : undefined}
     >
-      {/* Shine effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-
-      {/* Floating sparkles for completed exercises */}
-      {isCompleted && isCorrect && (
-        <>
-          <Sparkles className="absolute top-3 right-8 h-4 w-4 text-kidYellow sparkle-effect" />
-          <Sparkles className="absolute top-8 right-3 h-3 w-3 text-kidGreen sparkle-effect delay-500" />
-          <Sparkles className="absolute top-5 right-12 h-2 w-2 text-kidPink sparkle-effect delay-1000" />
-        </>
-      )}
-
-      {/* Indicador de estado mejorado */}
-      <div className="absolute top-3 right-3">
+      {/* Status indicator */}
+      <div className="absolute top-4 right-4">
         {isCompleted && isCorrect && (
-          <div className="bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-full p-3 animate-bounce shadow-lg">
-            <Check className="h-6 w-6" />
+          <div className="status-correct p-3">
+            <Check className="h-5 w-5" />
           </div>
         )}
         {isCompleted && !isCorrect && (
-          <div className="bg-gradient-to-r from-red-400 to-pink-500 text-white rounded-full p-3 animate-pulse shadow-lg">
-            <X className="h-6 w-6" />
+          <div className="status-incorrect p-3">
+            <X className="h-5 w-5" />
           </div>
         )}
         {!isCompleted && (
-          <div className="bg-gradient-to-r from-kidYellow to-kidOrange text-white rounded-full p-3 sparkle-effect shadow-lg">
-            <Star className="h-6 w-6" />
+          <div className="status-pending p-3">
+            <Clock className="h-5 w-5" />
           </div>
         )}
       </div>
 
-      {/* Número del ejercicio mejorado */}
-      <div className="absolute top-3 left-3 bg-gradient-to-r from-kidPurple to-kidBlue text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-lg shadow-lg">
+      {/* Exercise number */}
+      <div className="absolute top-4 left-4 modern-card bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-sm">
         #{exercise.id}
       </div>
 
-      {/* Operación matemática mejorada */}
-      <div className="mt-12 text-center space-y-4">
-        <div className="math-number text-3xl">
+      {/* Mathematical operation */}
+      <div className="mt-16 text-center space-y-6">
+        <div className="exercise-number">
           {formatNumber(minuend)}
         </div>
-        <div className="flex items-center justify-center space-x-3">
-          <span className="text-4xl font-bold text-kidRed animate-pulse">-</span>
-          <div className="math-number text-3xl">
+        <div className="flex items-center justify-center space-x-4">
+          <span className="text-3xl font-bold text-slate-600">−</span>
+          <div className="exercise-number">
             {formatNumber(subtrahend)}
           </div>
         </div>
-        <div className="border-t-4 border-gradient-to-r from-gray-300 to-gray-500 w-full mx-auto"></div>
-        <div className="h-12 flex items-center justify-center">
+        <div className="border-t-2 border-slate-300 w-full mx-auto"></div>
+        <div className="h-16 flex items-center justify-center">
           {isCompleted ? (
-            <div className={`font-mono text-3xl font-bold px-4 py-3 rounded-2xl border-4 shadow-lg ${
+            <div className={`exercise-number ${
               isCorrect 
-                ? 'text-green-700 bg-gradient-to-br from-green-100 to-emerald-100 border-green-300' 
-                : 'text-red-700 bg-gradient-to-br from-red-100 to-pink-100 border-red-300'
+                ? 'bg-emerald-100/80 text-emerald-700 border-emerald-300' 
+                : 'bg-red-100/80 text-red-700 border-red-300'
             }`}>
               {exercise.userAnswer?.toString().padStart(6, '0') || '------'}
             </div>
           ) : (
-            <div className="text-gray-400 text-2xl font-bold animate-pulse">¿?¿?¿?¿?¿?¿?</div>
+            <div className="exercise-number bg-slate-100/60 text-slate-400 border-slate-300">
+              ? ? ? ? ? ?
+            </div>
           )}
         </div>
       </div>
 
-      {/* Texto de estado mejorado */}
-      <div className="mt-6 text-center">
+      {/* Status text */}
+      <div className="mt-8 text-center">
         {isCompleted && isCorrect && (
-          <span className="text-green-600 font-bold text-lg bg-green-100 px-4 py-2 rounded-full">✨ ¡Perfecto! ✨</span>
+          <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
+            <Target className="h-4 w-4 mr-2" />
+            ¡Correcto!
+          </span>
         )}
         {isCompleted && !isCorrect && (
-          <span className="text-red-600 font-bold text-lg bg-red-100 px-4 py-2 rounded-full">🎯 ¡Inténtalo de nuevo!</span>
+          <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-red-100 text-red-800">
+            <X className="h-4 w-4 mr-2" />
+            Inténtalo de nuevo
+          </span>
         )}
         {!isCompleted && (
-          <span className="text-kidBlue font-bold text-lg bg-kidBlue/10 px-4 py-2 rounded-full">🚀 ¡Toca para resolver!</span>
+          <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+            <Star className="h-4 w-4 mr-2" />
+            Toca para resolver
+          </span>
         )}
       </div>
     </Card>
